@@ -1,11 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import SearchBar from '../components/SearchBar';
 import MovieCard from '../components/MovieCard';
 import { fetchTrendingTV } from '../api';
 
 export default function TVShowsPage() {
   const [shows, setShows] = useState([]);
-  const [searchResults, setSearchResults] = useState(null);
   const [filter, setFilter] = useState('All');
   const [loading, setLoading] = useState(true);
 
@@ -39,16 +37,14 @@ export default function TVShowsPage() {
   }, []);
 
   const displayShows = useMemo(() => {
-    const source = searchResults ?? shows;
-
     if (filter === 'All') {
-      return source;
+      return shows;
     }
 
-    return source.filter((show) =>
+    return shows.filter((show) =>
       (show.genres || []).some((genre) => genre.toLowerCase() === filter.toLowerCase()),
     );
-  }, [filter, searchResults, shows]);
+  }, [filter, shows]);
 
   return (
     <div className="pt-24 pb-10 px-6 min-h-screen">
@@ -56,9 +52,6 @@ export default function TVShowsPage() {
         <div>
           <h1 className="text-3xl font-bold text-white">TV Shows</h1>
           <p className="text-white/60 text-sm mt-1">Live picks, search results, and genre filters from the current feed.</p>
-        </div>
-        <div className="w-full md:w-auto">
-          <SearchBar onResults={(res) => setSearchResults(res)} onClear={() => setSearchResults(null)} />
         </div>
       </div>
 
