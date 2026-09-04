@@ -40,14 +40,21 @@ export default function MovieModal({ movie, onClose }) {
 
   useEffect(() => {
     setLoading(true);
-    Promise.all([fetchDetails(movie.id), fetchCast(movie.id), fetchVideos(movie.id), fetchSimilar(movie.id)])
-      .then(([d, c, v, s]) => {
-        setDetails(d.movie);
-        setCast(c.cast?.slice(0, 8) || []);
-        setVideos(v.results?.filter((x) => x.site === 'YouTube') || []);
-        setSimilar(s.results?.slice(0, 8) || []);
+    Promise.allSettled([fetchDetails(movie.id), fetchCast(movie.id), fetchVideos(movie.id), fetchSimilar(movie.id)])
+      .then(([detailsResult, castResult, videosResult, similarResult]) => {
+        if (detailsResult.status === 'fulfilled') {
+          setDetails(detailsResult.value.movie);
+        }
+        if (castResult.status === 'fulfilled') {
+          setCast(castResult.value.cast?.slice(0, 8) || []);
+        }
+        if (videosResult.status === 'fulfilled') {
+          setVideos(videosResult.value.results?.filter((x) => x.site === 'YouTube') || []);
+        }
+        if (similarResult.status === 'fulfilled') {
+          setSimilar(similarResult.value.results?.slice(0, 8) || []);
+        }
       })
-      .catch(() => {})
       .finally(() => setLoading(false));
   }, [movie.id]);
 

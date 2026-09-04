@@ -49,9 +49,9 @@ export default function Hero({ movies, onMovieClick }) {
     <div className="relative h-[520px] mx-6 mb-10 rounded-2xl overflow-hidden mt-20">
       <AnimatePresence mode="wait">
         <motion.div key={hero.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-          transition={{ duration: 0.8 }} className="absolute inset-0">
+          transition={{ duration: 0.8 }} className="absolute inset-0 bg-black">
           {bg ? (
-            <img src={bg} alt={hero.title} className="w-full h-full object-cover" />
+            <img src={bg} alt={hero.title} className="w-full h-full object-contain" />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-zinc-800 to-zinc-900" />
           )}
