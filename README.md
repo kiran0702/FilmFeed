@@ -136,6 +136,45 @@ npm run dev
 
 _The Vite development server will start, typically accessible at `http://localhost:5173`._
 
+## Deploying to Render
+
+FilmFeed can run as one Render Web Service. The root scripts install the nested
+dependencies, build the Vite client, and start the Express server. Express then
+serves the built client and the `/api` routes from the same service.
+
+Create a new **Web Service** in Render and connect the repository with these settings:
+
+- **Root Directory:** leave blank
+- **Environment:** `Node`
+- **Build Command:** `npm run build`
+- **Start Command:** `npm start`
+
+Add these environment variables in Render. Use the values from your own MongoDB,
+TMDB, and Cloudinary accounts; do not commit them to Git:
+
+```env
+NODE_ENV=production
+MONGO_URL=your_mongodb_connection_string
+JWT_SECRET=your_long_random_secret
+JWT_EXPIRES_IN=7d
+TMDB_READ_ACCESS_TOKEN=your_tmdb_read_access_token
+TMDB_API_KEY=your_tmdb_api_key
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+CLIENT_ORIGIN=https://your-service-name.onrender.com
+```
+
+Render provides `PORT` automatically, so do not add a fixed production port.
+After deployment, open the service URL. The React app and API should use the same
+origin, so no `VITE_API_BASE_URL` variable is required for this setup.
+
+Before deploying, run `npm run build` locally from the repository root. If you
+want to deploy the frontend and backend as separate Render services instead,
+use a Render Static Site for `client` with build command `npm install && npm run
+build`, publish directory `client/dist`, and set `VITE_API_BASE_URL` to the
+backend service's `/api` URL.
+
 ---
 
 ## 📂 Directory Structure
