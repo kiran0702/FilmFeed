@@ -1,62 +1,71 @@
-import Movie from "../models/movieModel.js";
+import {
+  getMovieCast,
+  getMovieDetails,
+  getMovieVideos,
+  getPopularMovies,
+  getSimilarMovies,
+  getTopRatedMovies,
+  getTrendingMovies,
+  getTrendingTVShows,
+  getUpcomingMovies,
+  searchMovies as searchMoviesFromTmdb,
+} from "../services/tmdbService.js";
+import asyncHandler from "express-async-handler";
 
-const sendMovieList = async (res, category) => {
-  const results = await Movie.find({ category }).sort({
-    releaseYear: -1,
-    title: 1,
-  });
+export const gettrdmovie = asyncHandler(async (req, res) => {
+  const payload = await getTrendingMovies();
+  return res.status(200).json(payload);
+});
 
-  return res.status(200).json({
-    count: results.length,
-    results,
-  });
-};
+export const gettrdtv = asyncHandler(async (req, res) => {
+  const payload = await getTrendingTVShows();
+  return res.status(200).json(payload);
+});
 
-export const gettrdmovie = async (req, res) => {
-  return sendMovieList(res, "trending");
-};
+export const getpopmovie = asyncHandler(async (req, res) => {
+  const payload = await getPopularMovies();
+  return res.status(200).json(payload);
+});
 
-export const getpopmovie = async (req, res) => {
-  return sendMovieList(res, "popular");
-};
+export const getupcommingmovies = asyncHandler(async (req, res) => {
+  const payload = await getUpcomingMovies();
+  return res.status(200).json(payload);
+});
 
-export const getupcommingmovies = async (req, res) => {
-  return sendMovieList(res, "upcoming");
-};
+export const gettoprated = asyncHandler(async (req, res) => {
+  const payload = await getTopRatedMovies();
+  return res.status(200).json(payload);
+});
 
-export const gettoprated = async (req, res) => {
-  return sendMovieList(res, "toprated");
-};
-
-export const getmoviebyID = async (req, res) => {
+export const getmoviebyID = asyncHandler(async (req, res) => {
   const movieId = req.params.id;
-  const movie = await Movie.findOne({ id: movieId });
+  const payload = await getMovieDetails(movieId);
+  return res.status(200).json(payload);
+});
 
-  if (!movie) {
-    return res.status(404).json({ message: "Movie not found" });
-  }
-
-  return res.status(200).json({ movie });
-};
-
-export const searchMovies = async (req, res) => {
+export const searchMovies = asyncHandler(async (req, res) => {
   const searchQuery = (req.query.query || "").trim().toLowerCase();
 
   if (!searchQuery) {
     return res.status(400).json({ message: "query parameter is required" });
   }
 
-  const movies = await Movie.find().sort({ releaseYear: -1, title: 1 });
-  const results = movies.filter((movie) => {
-    const searchableText =
-      `${movie.title} ${movie.overview} ${movie.genres.join(" ")}`.toLowerCase();
+  const payload = await searchMoviesFromTmdb(searchQuery);
 
-    return searchableText.includes(searchQuery);
-  });
+  return res.status(200).json(payload);
+});
 
-  return res.status(200).json({
-    query: searchQuery,
-    count: results.length,
-    results,
-  });
-};
+export const getMovieCastDetails = asyncHandler(async (req, res) => {
+  const payload = await getMovieCast(req.params.id);
+  return res.status(200).json(payload);
+});
+
+export const getSimilarMovieList = asyncHandler(async (req, res) => {
+  const payload = await getSimilarMovies(req.params.id);
+  return res.status(200).json(payload);
+});
+
+export const getMovieVideosList = asyncHandler(async (req, res) => {
+  const payload = await getMovieVideos(req.params.id);
+  return res.status(200).json(payload);
+});

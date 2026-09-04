@@ -25,3 +25,5 @@ export const authorizeRoles = (...allowedRoles) => {
     return next();
   };
 };
+
+export const protect = authenticate;
