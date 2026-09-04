@@ -1,5 +1,4 @@
 import { useEffect, useState, useMemo } from 'react';
-import SearchBar from '../components/SearchBar';
 import MovieCard from '../components/MovieCard';
 import { fetchPopular } from '../api';
 
@@ -22,7 +21,6 @@ const SKELETON_KEYS = [
 
 export default function MoviesPage() {
   const [movies, setMovies] = useState([]);
-  const [searchResults, setSearchResults] = useState(null);
   const [filter, setFilter] = useState('All');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -61,16 +59,14 @@ export default function MoviesPage() {
   }, []);
 
   const displayMovies = useMemo(() => {
-    const source = searchResults ?? movies;
-
     if (filter === 'All') {
-      return source;
+      return movies;
     }
 
-    return source.filter((movie) =>
+    return movies.filter((movie) =>
       (movie.genres || []).some((genre) => genre.toLowerCase() === filter.toLowerCase()),
     );
-  }, [filter, searchResults, movies]);
+  }, [filter, movies]);
 
   const hasNoResults = !loading && displayMovies.length === 0;
 
@@ -80,9 +76,6 @@ export default function MoviesPage() {
         <div>
           <h1 className="text-3xl font-bold text-white">All Movies</h1>
           <p className="text-white/60 text-sm mt-1">Live picks, search results, and genre filters from the current feed.</p>
-        </div>
-        <div className="w-full md:w-auto">
-          <SearchBar onResults={(res) => setSearchResults(res)} onClear={() => setSearchResults(null)} />
         </div>
       </div>
 
