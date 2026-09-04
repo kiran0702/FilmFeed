@@ -76,7 +76,15 @@ export default function Navbar({ onLogout }) {
               onClick={() => setShowUserMenu((v) => !v)}
               className="w-8 h-8 rounded-full bg-linear-to-br from-red-500 to-purple-600 flex items-center justify-center text-xs font-bold text-white hover:ring-2 hover:ring-red-500/60 transition-all"
             >
-              {initial}
+              {user?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt={`${user.name || 'User'} avatar`}
+                  className="w-full h-full rounded-full object-cover"
+                />
+              ) : (
+                initial
+              )}
             </button>
             <AnimatePresence>
               {showUserMenu && (
