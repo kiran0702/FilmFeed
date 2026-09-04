@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { backdropUrl, fetchDetails, fetchSimilar, fetchVideos, imgUrl } from '../api';
+import { backdropUrl, fetchCast, fetchDetails, fetchSimilar, fetchVideos, imgUrl } from '../api';
 
 function Spinner({ sm }) {
   return (
@@ -32,6 +32,7 @@ function Rating({ value }) {
 
 export default function MovieModal({ movie, onClose }) {
   const [details, setDetails] = useState(null);
+  const [cast, setCast] = useState([]);
   const [videos, setVideos] = useState([]);
   const [similar, setSimilar] = useState([]);
   const [tab, setTab] = useState('overview');
@@ -39,9 +40,10 @@ export default function MovieModal({ movie, onClose }) {
 
   useEffect(() => {
     setLoading(true);
-    Promise.all([fetchDetails(movie.id), fetchVideos(movie.id), fetchSimilar(movie.id)])
-      .then(([d, v, s]) => {
+    Promise.all([fetchDetails(movie.id), fetchCast(movie.id), fetchVideos(movie.id), fetchSimilar(movie.id)])
+      .then(([d, c, v, s]) => {
         setDetails(d.movie);
+        setCast(c.cast?.slice(0, 8) || []);
         setVideos(v.results?.filter((x) => x.site === 'YouTube') || []);
         setSimilar(s.results?.slice(0, 8) || []);
       })
@@ -55,7 +57,39 @@ export default function MovieModal({ movie, onClose }) {
   let content = null;
 
   if (!loading && tab === 'overview') {
-    content = <p className="text-white/70 text-sm leading-relaxed">{details?.overview || movie.overview}</p>;
+    content = (
+      <div>
+        <p className="text-white/70 text-sm leading-relaxed">{details?.overview || movie.overview}</p>
+        <div className="mt-6">
+          <h3 className="text-white text-sm font-semibold mb-3">Cast</h3>
+          {cast.length ? (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {cast.map((member) => {
+                const profile = imgUrl(member.profilePath, 'w185');
+
+                return (
+                  <div key={member.id} className="flex items-center gap-2 min-w-0">
+                    {profile ? (
+                      <img src={profile} alt="" className="w-10 h-10 rounded-full object-cover shrink-0" />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/60 text-xs shrink-0">
+                        {member.name?.charAt(0) || '?'}
+                      </div>
+                    )}
+                    <div className="min-w-0">
+                      <p className="text-white/90 text-xs font-medium truncate">{member.name}</p>
+                      <p className="text-white/45 text-xs truncate">{member.character}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="text-white/40 text-sm">No cast information available.</p>
+          )}
+        </div>
+      </div>
+    );
   } else if (!loading && tab === 'trailer') {
     content = trailer ? (
       <div className="aspect-video rounded-xl overflow-hidden bg-black">

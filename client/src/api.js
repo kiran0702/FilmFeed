@@ -69,6 +69,7 @@ export const fetchTopRated  = () => movieGet('/toprated')
 export const fetchUpcoming  = () => movieGet('/upcoming')
 export const fetchSearch    = (q) => movieGet(`/search?query=${encodeURIComponent(q)}`)
 export const fetchDetails   = (id) => movieGet(`/details/${id}`)
+export const fetchCast      = (id) => movieGet(`/${id}/cast`)
 export const fetchVideos    = (id) => movieGet(`/${id}/videos`)
 export const fetchSimilar   = (id) => movieGet(`/${id}/similar`)
 
