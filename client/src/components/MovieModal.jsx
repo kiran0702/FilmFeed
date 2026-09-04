@@ -117,7 +117,7 @@ export default function MovieModal({ movie, onClose }) {
         </div>
 
         <div className="overflow-y-auto flex-1" style={{ scrollbarWidth: 'none' }}>
-          <div className="flex flex-col md:flex-row gap-5 px-6 -mt-16 mb-5">
+          <div className="flex flex-col md:flex-row gap-5 px-6 pt-5 mb-5">
             {poster && (
               <div className="w-40 md:w-56 aspect-[2/3] shrink-0 rounded-2xl overflow-hidden shadow-xl border border-white/10 bg-black/40">
                 <img src={poster} alt="" className="w-full h-full object-cover" />
