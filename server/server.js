@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import movieRoutes from "./routes/movieRoutes.js";
@@ -9,8 +9,7 @@ import reviewRoutes from "./routes/reviewRoutes.js";
 import connectDB from "./config/db.js";
 import { seedDatabase } from "./config/seed.js";
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
-dotenv.config();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5000;
 const app = express();
 
 app.disable("x-powered-by");

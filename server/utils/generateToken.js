@@ -1,7 +1,14 @@
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "filmfeed-development-secret";
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
+const getJwtSecret = () => {
+  if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET is not defined");
+  }
+
+  return process.env.JWT_SECRET;
+};
+
+const getJwtExpiresIn = () => process.env.JWT_EXPIRES_IN || "7d";
 
 const getUserId = (user) => user?.id || user?._id?.toString();
 
@@ -13,8 +20,8 @@ export const generateToken = (user) => {
       email: user.email,
       role: user.role,
     },
-    JWT_SECRET,
-    { expiresIn: JWT_EXPIRES_IN },
+    getJwtSecret(),
+    { expiresIn: getJwtExpiresIn() },
   );
 };
 
@@ -28,7 +35,7 @@ export const verifyToken = (token) => {
       ? token.slice(7)
       : token;
 
-    return jwt.verify(normalizedToken, JWT_SECRET);
+    return jwt.verify(normalizedToken, getJwtSecret());
   } catch {
     return null;
   }

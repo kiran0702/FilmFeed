@@ -5,8 +5,11 @@ server/node_modules
 
 # environment variables
 .env
-client/.env
-server/.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
 
 # build folders
 dist

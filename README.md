@@ -43,6 +43,7 @@
 FilmFeed employs a decoupled client-server architecture, enabling independent scaling and seamless continuous deployment pipelines.
 
 ### Client-Side (Frontend)
+
 - **Framework:** React 18
 - **Build Engine:** Vite
 - **Styling & UI:** Tailwind CSS, Framer Motion
@@ -50,6 +51,7 @@ FilmFeed employs a decoupled client-server architecture, enabling independent sc
 - **Routing:** React Router DOM v7
 
 ### Server-Side (Backend)
+
 - **Runtime & Framework:** Node.js, Express.js
 - **Database:** MongoDB
 - **ODM:** Mongoose
@@ -65,6 +67,7 @@ Follow these instructions to set up the project locally for development and test
 ### Prerequisites
 
 Ensure you have the following installed on your local machine:
+
 - **Node.js** (v18.x or higher recommended)
 - **MongoDB** (Local instance or Atlas cluster)
 - **Git**
@@ -72,22 +75,33 @@ Ensure you have the following installed on your local machine:
 ### Installation
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/your-username/FilmFeed.git
    cd FilmFeed
    ```
 
 2. **Setup the Backend:**
+
    ```bash
    cd server
    npm install
    ```
+
    Create a `.env` file in the `server` root directory:
+
    ```env
    NODE_ENV=development
    PORT=5000
-   MONGO_URI=your_mongodb_connection_string
+   MONGO_URL=your_mongodb_connection_string
    JWT_SECRET=your_super_secret_jwt_key
+   JWT_EXPIRES_IN=7d
+   TMDB_READ_ACCESS_TOKEN=your_tmdb_read_access_token
+   TMDB_API_KEY=your_tmdb_api_key
+   CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+   CLOUDINARY_API_KEY=your_cloudinary_api_key
+   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+   CLIENT_ORIGIN=http://localhost:5173
    ```
 
 3. **Setup the Frontend:**
@@ -97,7 +111,7 @@ Ensure you have the following installed on your local machine:
    ```
    Create a `.env` file in the `client` root directory:
    ```env
-   VITE_API_BASE_URL=http://localhost:5000/api
+   VITE_API_BASE_URL=/api
    ```
 
 ### Running the Environment
@@ -105,18 +119,22 @@ Ensure you have the following installed on your local machine:
 You will need to run the client and the server concurrently in separate terminal windows.
 
 **Terminal 1 (Backend API):**
+
 ```bash
 cd server
 npm run dev
 ```
-*The Express server will initialize on `http://localhost:5000`.*
+
+_The Express server will initialize on `http://localhost:5000`._
 
 **Terminal 2 (Frontend Client):**
+
 ```bash
 cd client
 npm run dev
 ```
-*The Vite development server will start, typically accessible at `http://localhost:5173`.*
+
+_The Vite development server will start, typically accessible at `http://localhost:5173`._
 
 ---
 
