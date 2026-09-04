@@ -1,9 +1,5 @@
 {
   "private": true,
-  "workspaces": [
-    "server",
-    "client"
-  ],
   "engines": {
     "node": ">=20.19.0"
   },
